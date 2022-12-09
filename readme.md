@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+In your [post](https://stackoverflow.com/q/74744618/5438626) you ask how to "add all the methods from other classes into the class where the blackjack game will be played". Basically, when you declare an _instance_ of something like the `Deck` class to you `MainForm` then (as you phrased it) all of its members have beed "added" (in a manner of speaking) because you can access them using the member property that you declared. So that's the first thing we'll do in the MainForm. I will also mention that sometimes there are `static` or `const` members and these don't require an instance to use them, rather you would use the class name instead.
 
-namespace card_game_00
-{
     public partial class MainForm : Form
     {
         // Make instance of CardDeck
@@ -53,29 +46,17 @@ namespace card_game_00
             Cursor.Position = Point.Add(Cursor.Position, new Size(1,1));
         }
     }
-    public enum CardValue
-    {
-        Ace = 1,
-        Two,
-        Three,
-        Four,
-        Five,
-        Six,
-        Seven,
-        Eight,
-        Nine,
-        Ten,
-        Jack,
-        Queen,
-        King,
-    }
-    public enum CardSuit
-    {
-        Hearts,
-        Spades,
-        Clubs,
-        Diamonds,
-    }
+
+
+By and large, I've learned more from code _samples_ where I can run and set breakpoints than I have from tutorials, so I put together one you can [clone](https://github.com/IVSoftware/card-game-00.git) but it's not a _Blackjack_ game I'll leave that to you!
+
+![screenshot]()
+
+***
+My sample uses the following simplified classes:
+
+*Card*
+
     public class Card
     {
         // https://office-watch.com/2021/playing-card-suits-%E2%99%A0%E2%99%A5%E2%99%A6%E2%99%A3-in-word-excel-powerpoint-and-outlook/#:~:text=Insert%20%7C%20Symbols%20%7C%20Symbol%20and%20look,into%20the%20character%20code%20box.
@@ -106,6 +87,10 @@ namespace card_game_00
             return $"{value} {suit}";
         }
     }
+
+***
+*Deck*
+
     public class Deck : Queue<Card>
     {
         // Instantiate Random ONE time (not EVERY time).
@@ -138,4 +123,29 @@ namespace card_game_00
         }
         public Card GetNext() => Dequeue();
     }
-}
+
+***
+*Enums*
+    public enum CardValue
+    {
+        Ace = 1,
+        Two,
+        Three,
+        Four,
+        Five,
+        Six,
+        Seven,
+        Eight,
+        Nine,
+        Ten,
+        Jack,
+        Queen,
+        King,
+    }
+    public enum CardSuit
+    {
+        Hearts,
+        Spades,
+        Clubs,
+        Diamonds,
+    }
