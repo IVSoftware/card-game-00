@@ -143,17 +143,24 @@ namespace card_game_00
         public async Task Shuffle()
         {
             Clear();
+            // Generate a list of ints from 0 to 51. We do this
+            // so that we don't get repeats of the card index.
             List<int> sequence = Enumerable.Range(0, 52).ToList();
             while (sequence.Count != 0)
             {
-                int nextRand = _rando.Next(0, sequence.Count());
-                Enqueue(_unshuffled[sequence[nextRand]]);
-                sequence.RemoveAt(nextRand);
-#if DEBUG
-                var dups = this.GroupBy(_ => _.ToString()).Where(_=>_.Count() > 1).ToDictionary(_ => _.Key, _ => _.ToArray());
-                Debug.Assert(!dups.Any(), "Oops there are duplicate cards.");
-#endif
+                // Choose a unique card index from the sequence at
+                // random based on the number of ints that remain.
+                int randomIndexInSequence = _rando.Next(0, sequence.Count());
+                int cardNumberOutOfOf52 = sequence[randomIndexInSequence];
+                Enqueue(_unshuffled[cardNumberOutOfOf52]);
+                sequence.RemoveAt(randomIndexInSequence);
             }
+            // Make  sure that we did this right!
+            Debug.Assert(
+                this.Distinct().Count() == 52,
+                "Error: There are duplicate cards."
+            );
+
             // Spin a wait cursor as a visual indicator that "something is happening".
             await Task.Delay(TimeSpan.FromMilliseconds(500)); 
         }
