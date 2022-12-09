@@ -55,7 +55,7 @@ By and large, I've learned more from code _samples_ where I can run and set brea
 ***
 My sample uses the following simplified classes:
 
-*Card*
+**Card**
 
     public class Card
     {
@@ -89,7 +89,7 @@ My sample uses the following simplified classes:
     }
 
 ***
-*Deck*
+**Deck**
 
     public class Deck : Queue<Card>
     {
@@ -125,7 +125,7 @@ My sample uses the following simplified classes:
     }
 
 ***
-*Enums*
+**Enums**
     public enum CardValue
     {
         Ace = 1,
