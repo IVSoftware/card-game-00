@@ -16,14 +16,13 @@ In your [post](https://stackoverflow.com/q/74744618/5438626) you ask how to "add
             labelHandA3.Text = $"Q {Card.Spades}";
             labelHandA4.Text = $"K {Card.Spades}";
             labelHandA5.Text = $"A {Card.Spades}";
-            labelHandB1.Text = $"10 {Card.Hearts}";
-            labelHandB2.Text = $"J {Card.Hearts}";
-            labelHandB3.Text = $"Q {Card.Hearts}";
-            labelHandB4.Text = $"K {Card.Hearts}";
-            labelHandB5.Text = $"A {Card.Hearts}";
+            labelHandB1.Text = $"10 {Card.Clubs}";
+            labelHandB2.Text = $"J {Card.Clubs}";
+            labelHandB3.Text = $"Q {Card.Clubs}";
+            labelHandB4.Text = $"K {Card.Clubs}";
+            labelHandB5.Text = $"A {Card.Clubs}";
             buttonDeal.Click += dealTheCards;
         }
-
         private async void dealTheCards(object sender, EventArgs e)
         {
             buttonDeal.Refresh(); UseWaitCursor = true;
@@ -31,19 +30,34 @@ In your [post](https://stackoverflow.com/q/74744618/5438626) you ask how to "add
             await DeckInstance.Shuffle();
             // Now we need the instance of the Desk to get the
             // cards one-by-one so use the property we declared.
-            labelHandA1.Text = DeckInstance.Dequeue().ToString();
-            labelHandA2.Text = DeckInstance.Dequeue().ToString();
-            labelHandA3.Text = DeckInstance.Dequeue().ToString();
-            labelHandA4.Text = DeckInstance.Dequeue().ToString();
-            labelHandA5.Text = DeckInstance.Dequeue().ToString();
-            labelHandB1.Text = DeckInstance.Dequeue().ToString();
-            labelHandB2.Text = DeckInstance.Dequeue().ToString();
-            labelHandB3.Text = DeckInstance.Dequeue().ToString();
-            labelHandB4.Text = DeckInstance.Dequeue().ToString();
-            labelHandB5.Text = DeckInstance.Dequeue().ToString();
+            setCard(labelHandA1, DeckInstance.Dequeue());
+            setCard(labelHandA2, DeckInstance.Dequeue());
+            setCard(labelHandA3, DeckInstance.Dequeue());
+            setCard(labelHandA4, DeckInstance.Dequeue());
+            setCard(labelHandA5, DeckInstance.Dequeue());
+            setCard(labelHandB1, DeckInstance.Dequeue());
+            setCard(labelHandB2, DeckInstance.Dequeue());
+            setCard(labelHandB3, DeckInstance.Dequeue());
+            setCard(labelHandB4, DeckInstance.Dequeue());
+            setCard(labelHandB5, DeckInstance.Dequeue());
             UseWaitCursor = false;
             // Dum hack to make sure the cursor redraws.
             Cursor.Position = Point.Add(Cursor.Position, new Size(1,1));
+        }
+        private void setCard(Label label, Card card)
+        {
+            label.Text = card.ToString();
+            switch (card.CardSuit)
+            {
+                case CardSuit.Hearts:
+                case CardSuit.Diamonds:
+                    label.ForeColor = Color.Red;
+                    break;
+                case CardSuit.Spades:
+                case CardSuit.Clubs:
+                    label.ForeColor = Color.Black;
+                    break;
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,14 +24,13 @@ namespace card_game_00
             labelHandA3.Text = $"Q {Card.Spades}";
             labelHandA4.Text = $"K {Card.Spades}";
             labelHandA5.Text = $"A {Card.Spades}";
-            labelHandB1.Text = $"10 {Card.Hearts}";
-            labelHandB2.Text = $"J {Card.Hearts}";
-            labelHandB3.Text = $"Q {Card.Hearts}";
-            labelHandB4.Text = $"K {Card.Hearts}";
-            labelHandB5.Text = $"A {Card.Hearts}";
+            labelHandB1.Text = $"10 {Card.Clubs}";
+            labelHandB2.Text = $"J {Card.Clubs}";
+            labelHandB3.Text = $"Q {Card.Clubs}";
+            labelHandB4.Text = $"K {Card.Clubs}";
+            labelHandB5.Text = $"A {Card.Clubs}";
             buttonDeal.Click += dealTheCards;
         }
-
         private async void dealTheCards(object sender, EventArgs e)
         {
             buttonDeal.Refresh(); UseWaitCursor = true;
@@ -38,19 +38,34 @@ namespace card_game_00
             await DeckInstance.Shuffle();
             // Now we need the instance of the Desk to get the
             // cards one-by-one so use the property we declared.
-            labelHandA1.Text = DeckInstance.Dequeue().ToString();
-            labelHandA2.Text = DeckInstance.Dequeue().ToString();
-            labelHandA3.Text = DeckInstance.Dequeue().ToString();
-            labelHandA4.Text = DeckInstance.Dequeue().ToString();
-            labelHandA5.Text = DeckInstance.Dequeue().ToString();
-            labelHandB1.Text = DeckInstance.Dequeue().ToString();
-            labelHandB2.Text = DeckInstance.Dequeue().ToString();
-            labelHandB3.Text = DeckInstance.Dequeue().ToString();
-            labelHandB4.Text = DeckInstance.Dequeue().ToString();
-            labelHandB5.Text = DeckInstance.Dequeue().ToString();
+            setCard(labelHandA1, DeckInstance.Dequeue());
+            setCard(labelHandA2, DeckInstance.Dequeue());
+            setCard(labelHandA3, DeckInstance.Dequeue());
+            setCard(labelHandA4, DeckInstance.Dequeue());
+            setCard(labelHandA5, DeckInstance.Dequeue());
+            setCard(labelHandB1, DeckInstance.Dequeue());
+            setCard(labelHandB2, DeckInstance.Dequeue());
+            setCard(labelHandB3, DeckInstance.Dequeue());
+            setCard(labelHandB4, DeckInstance.Dequeue());
+            setCard(labelHandB5, DeckInstance.Dequeue());
             UseWaitCursor = false;
             // Dum hack to make sure the cursor redraws.
             Cursor.Position = Point.Add(Cursor.Position, new Size(1,1));
+        }
+        private void setCard(Label label, Card card)
+        {
+            label.Text = card.ToString();
+            switch (card.CardSuit)
+            {
+                case CardSuit.Hearts:
+                case CardSuit.Diamonds:
+                    label.ForeColor = Color.Red;
+                    break;
+                case CardSuit.Spades:
+                case CardSuit.Clubs:
+                    label.ForeColor = Color.Black;
+                    break;
+            }
         }
     }
     public enum CardValue
@@ -109,7 +124,7 @@ namespace card_game_00
     public class Deck : Queue<Card>
     {
         // Instantiate Random ONE time (not EVERY time).
-        private readonly Random _rando = new Random();
+        private static Random _rando = new Random();
         private readonly Card[] _unshuffled;
         public Deck()
         {
@@ -122,16 +137,22 @@ namespace card_game_00
                 }
             }
             _unshuffled = tmp.ToArray();
+            var distinct = _unshuffled.Distinct().Count();
+            Debug.Assert(distinct == 52, "Oops there are duplicate cards.");
         }
         public async Task Shuffle()
         {
             Clear();
             List<int> sequence = Enumerable.Range(0, 52).ToList();
-            while(sequence.Count != 0)
+            while (sequence.Count != 0)
             {
                 int nextRand = _rando.Next(0, sequence.Count());
-                Enqueue(_unshuffled[nextRand]);
+                Enqueue(_unshuffled[sequence[nextRand]]);
                 sequence.RemoveAt(nextRand);
+#if DEBUG
+                var dups = this.GroupBy(_ => _.ToString()).Where(_=>_.Count() > 1).ToDictionary(_ => _.Key, _ => _.ToArray());
+                Debug.Assert(!dups.Any(), "Oops there are duplicate cards.");
+#endif
             }
             // Spin a wait cursor as a visual indicator that "something is happening".
             await Task.Delay(TimeSpan.FromMilliseconds(500)); 
