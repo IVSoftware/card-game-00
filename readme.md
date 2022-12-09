@@ -48,7 +48,7 @@ In your [post](https://stackoverflow.com/q/74744618/5438626) you ask how to "add
     }
 
 
-By and large, I've learned more from code _samples_ where I can run and set breakpoints than I have from tutorials, so I put together one you can [clone](https://github.com/IVSoftware/card-game-00.git) but it's not a _Blackjack_ game I'll leave that to you so I don't take away any of your fun!
+By and large, I've learned more from code _samples_ where I can run and set breakpoints than I have from tutorials, so I put together one you can [clone](https://github.com/IVSoftware/card-game-00.git) but it's not a _Blackjack_ game I'll leave that to you so I don't take away your fun!
 
 ![screenshot](https://github.com/IVSoftware/card-game-00/blob/master/card-game-00/Screenshots/screenshot.png)
 
