@@ -1,4 +1,4 @@
-In your [post](https://stackoverflow.com/q/74744618/5438626) you ask how to "add all the methods from other classes into the class where the blackjack game will be played". Basically, when you declare an _instance_ of something like the `Deck` class to you `MainForm` then (as you phrased it) all of its members have beed "added" (in a manner of speaking) because you can access them using the member property that you declared. So that's the first thing we'll do in the MainForm. I will also mention that sometimes there are `static` or `const` members and these don't require an instance to use them, rather you would use the class name instead.
+In your [post](https://stackoverflow.com/q/74744618/5438626) you ask how to "add all the methods from other classes into the class where the blackjack game will be played". Basically, when you declare an _instance_ of something like the `Deck` class in your `MainForm` then (as you phrased it) all of its members have beed "added" (in a manner of speaking) because you can access them using the member property that you declared. So that's the first thing we'll do in the MainForm. I will also mention that sometimes there are `static` or `const` members and these don't require an instance to use them, rather you would use the class name instead. You'll see examples of this in the `MainForm` constructor like `Card.Spades`.
 
     public partial class MainForm : Form
     {
@@ -48,9 +48,9 @@ In your [post](https://stackoverflow.com/q/74744618/5438626) you ask how to "add
     }
 
 
-By and large, I've learned more from code _samples_ where I can run and set breakpoints than I have from tutorials, so I put together one you can [clone](https://github.com/IVSoftware/card-game-00.git) but it's not a _Blackjack_ game I'll leave that to you!
+By and large, I've learned more from code _samples_ where I can run and set breakpoints than I have from tutorials, so I put together one you can [clone](https://github.com/IVSoftware/card-game-00.git) but it's not a _Blackjack_ game I'll leave that to you so I don't take away any of your fun!
 
-![screenshot]()
+![screenshot](https://github.com/IVSoftware/card-game-00/blob/master/card-game-00/Screenshots/screenshot.png)
 
 ***
 My sample uses the following simplified classes:
