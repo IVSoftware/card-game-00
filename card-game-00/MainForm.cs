@@ -1,16 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace card_game_00
-{   
+{
+    public partial class MainForm : Form
+    {
+        // Make instance of CardDeck
+        Deck Deck = new Deck();
+        public MainForm()
+        {
+            InitializeComponent();
+            Text = "Card Game";
+            tableLayoutCards.Font = new Font("Sergoe UI Symbol", 9);
+            // Static or const members of a class do not require an
+            // instance. Use the class name to reference these members.
+            labelHandA1.Text = $"10 {Card.Spades}";
+            labelHandA2.Text = $"J {Card.Spades}";
+            labelHandA3.Text = $"Q {Card.Spades}";
+            labelHandA4.Text = $"K {Card.Spades}";
+            labelHandA5.Text = $"A {Card.Spades}";
+            labelHandB1.Text = $"10 {Card.Hearts}";
+            labelHandB2.Text = $"J {Card.Hearts}";
+            labelHandB3.Text = $"Q {Card.Hearts}";
+            labelHandB4.Text = $"K {Card.Hearts}";
+            labelHandB5.Text = $"A {Card.Hearts}";
+            buttonDeal.Click += dealTheCards;
+        }
+
+        private async void dealTheCards(object sender, EventArgs e)
+        {
+            buttonDeal.Refresh(); UseWaitCursor = true;
+            // When a non-UI task might take some time, run it on a Task.
+            await Deck.Shuffle();
+            // Now we need the instance of the Desk to get the
+            // cards one-by-one so use the property we declared.
+            labelHandA1.Text = Deck.Dequeue().ToString();
+            labelHandA2.Text = Deck.Dequeue().ToString();
+            labelHandA3.Text = Deck.Dequeue().ToString();
+            labelHandA4.Text = Deck.Dequeue().ToString();
+            labelHandA5.Text = Deck.Dequeue().ToString();
+            labelHandB1.Text = Deck.Dequeue().ToString();
+            labelHandB2.Text = Deck.Dequeue().ToString();
+            labelHandB3.Text = Deck.Dequeue().ToString();
+            labelHandB4.Text = Deck.Dequeue().ToString();
+            labelHandB5.Text = Deck.Dequeue().ToString();
+            UseWaitCursor = false;
+            // Dum hack to make sure the cursor redraws.
+            Cursor.Position = Point.Add(Cursor.Position, new Size(1,1));
+        }
+    }
     public enum CardValue
     {
         Ace = 1,
@@ -33,47 +75,6 @@ namespace card_game_00
         Spades = 2,
         Clubs = 3,
         Diamonds = 4
-    }
-    public partial class MainForm : Form
-    {
-        // Make instance of CardDeck
-        Deck Deck = new Deck();
-        public MainForm()
-        {
-            InitializeComponent();
-            tableLayoutCards.Font = new Font("Sergoe UI Symbol", 9);
-            // Static or const members of a class do not require an
-            // instance. Use the class name to reference these members.
-            labelHandA1.Text = $"10 {Card.Spades}";
-            labelHandA2.Text = $"J {Card.Spades}";
-            labelHandA3.Text = $"Q {Card.Spades}";
-            labelHandA4.Text = $"K {Card.Spades}";
-            labelHandA5.Text = $"A {Card.Spades}";
-            labelHandB1.Text = $"10 {Card.Hearts}";
-            labelHandB2.Text = $"J {Card.Hearts}";
-            labelHandB3.Text = $"Q {Card.Hearts}";
-            labelHandB4.Text = $"K {Card.Hearts}";
-            labelHandB5.Text = $"A {Card.Hearts}";
-            buttonDeal.Click += dealTheCards;
-        }
-
-        private async void dealTheCards(object sender, EventArgs e)
-        {
-            UseWaitCursor = true;
-            // When a non-UI task might take some time, run it on a Task.
-            await Task.Run(() => Deck.Shuffle());
-            labelHandA1.Text = Deck.Dequeue().ToString();
-            labelHandA2.Text = Deck.Dequeue().ToString();
-            labelHandA3.Text = Deck.Dequeue().ToString();
-            labelHandA4.Text = Deck.Dequeue().ToString();
-            labelHandA5.Text = Deck.Dequeue().ToString();
-            labelHandB1.Text = Deck.Dequeue().ToString(); ;
-            labelHandB2.Text = Deck.Dequeue().ToString();
-            labelHandB3.Text = Deck.Dequeue().ToString();
-            labelHandB4.Text = Deck.Dequeue().ToString();
-            labelHandB5.Text = Deck.Dequeue().ToString();
-            UseWaitCursor = false;
-        }
     }
     public class Card
     {
@@ -107,6 +108,7 @@ namespace card_game_00
     }
     public class Deck : Queue<Card>
     {
+        // Instantiate Random ONE time (not EVERY time).
         private readonly Random _rando = new Random();
         private readonly Card[] _unshuffled;
         public Deck()
@@ -121,7 +123,7 @@ namespace card_game_00
             }
             _unshuffled = tmp.ToArray();
         }
-        public void Shuffle()
+        public async Task Shuffle()
         {
             Clear();
             List<int> sequence = Enumerable.Range(0, 52).ToList();
@@ -131,7 +133,8 @@ namespace card_game_00
                 Enqueue(_unshuffled[nextRand]);
                 sequence.RemoveAt(nextRand);
             }
-            Thread.Sleep(TimeSpan.FromSeconds(1));
+            // Spin a wait cursor as a visual indicator that "something is happening".
+            await Task.Delay(TimeSpan.FromMilliseconds(500)); 
         }
         public Card GetNext() => Dequeue();
     }
