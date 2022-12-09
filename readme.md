@@ -126,6 +126,7 @@ My sample uses the following simplified classes:
 
 ***
 **Enums**
+
     public enum CardValue
     {
         Ace = 1,
